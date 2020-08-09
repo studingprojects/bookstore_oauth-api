@@ -7,7 +7,7 @@ import (
 	atDomain "github.com/studingprojects/bookstore_oauth-api/src/domain/access_token"
 	"github.com/studingprojects/bookstore_oauth-api/src/domain/user"
 	"github.com/studingprojects/bookstore_oauth-api/src/service/access_token"
-	"github.com/studingprojects/bookstore_oauth-api/src/utils/errors"
+	errors "github.com/studingprojects/bookstore_utils-go/rest_errors"
 )
 
 type AccessTokenHandler interface {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/studingprojects/bookstore_oauth-api/src/utils/errors"
 	"github.com/studingprojects/bookstore_user-api/utils/crypto_utils"
+	errors "github.com/studingprojects/bookstore_utils-go/rest_errors"
 )
 
 const (
@@ -27,7 +27,7 @@ type AccessTokenRequest struct {
 	ClientSecrect string `json:"clientSecrect"`
 }
 
-func (atr *AccessTokenRequest) Validate() *errors.RestErr {
+func (atr *AccessTokenRequest) Validate() errors.RestErr {
 	switch atr.GrantType {
 	case grantTypePassword:
 		break

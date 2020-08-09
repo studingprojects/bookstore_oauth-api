@@ -7,7 +7,7 @@ import (
 
 	"github.com/mercadolibre/golang-restclient/rest"
 	"github.com/studingprojects/bookstore_oauth-api/src/domain/user"
-	"github.com/studingprojects/bookstore_oauth-api/src/utils/errors"
+	errors "github.com/studingprojects/bookstore_utils-go/rest_errors"
 )
 
 var (
@@ -18,7 +18,7 @@ var (
 )
 
 type UserRepository interface {
-	Login(string, string) (*user.User, *errors.RestErr)
+	Login(string, string) (*user.User, errors.RestErr)
 }
 type userRepository struct {
 }
@@ -27,7 +27,7 @@ func NewRepository() UserRepository {
 	return &userRepository{}
 }
 
-func (r *userRepository) Login(username string, password string) (*user.User, *errors.RestErr) {
+func (r *userRepository) Login(username string, password string) (*user.User, errors.RestErr) {
 	request := user.UserLoginRequest{
 		Email:    username,
 		Password: password,
@@ -41,17 +41,16 @@ func (r *userRepository) Login(username string, password string) (*user.User, *e
 	if response.StatusCode > 299 {
 		var restErr errors.RestErr
 		if err := json.Unmarshal(response.Bytes(), &restErr); err != nil {
-			return nil, errors.NewInternalServerError("user service: could not parse user response")
+			return nil, errors.NewInternalServerError("user service: could not parse user response", err)
 		}
-		return nil, &errors.RestErr{
-			Status:  restErr.Status,
-			Message: fmt.Sprintf("user service: %s", restErr.Message),
-			Error:   "external_service_error",
-		}
+		return nil, errors.NewExternalServiceError(
+			fmt.Sprintf("user service: %s", restErr.Message()),
+			nil,
+		)
 	}
 	var userInfo user.User
 	if err := json.Unmarshal(response.Bytes(), &userInfo); err != nil {
-		return nil, errors.NewInternalServerError("user service: could not parse user response")
+		return nil, errors.NewInternalServerError("user service: could not parse user response", err)
 	}
 
 	return &userInfo, nil
