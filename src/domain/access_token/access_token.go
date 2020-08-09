@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/studingprojects/bookstore_user-api/utils/crypto_utils"
-	errors "github.com/studingprojects/bookstore_utils-go/rest_errors"
+	"github.com/studingprojects/bookstore_utils-go/rest_errors"
 )
 
 const (
@@ -19,7 +19,7 @@ type AccessTokenRequest struct {
 	Scope     string `json:"scope"`
 
 	// Used for password grant type
-	Username string `json:"userName"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 
 	// Used for client_credentials grant type
@@ -27,14 +27,14 @@ type AccessTokenRequest struct {
 	ClientSecrect string `json:"clientSecrect"`
 }
 
-func (atr *AccessTokenRequest) Validate() errors.RestErr {
+func (atr *AccessTokenRequest) Validate() rest_errors.RestErr {
 	switch atr.GrantType {
 	case grantTypePassword:
 		break
 	case grantTypeClientCredentials:
 		break
 	default:
-		return errors.NewBadRequestError("invalid grant type")
+		return rest_errors.NewBadRequestError("invalid grant type")
 	}
 	return nil
 }
